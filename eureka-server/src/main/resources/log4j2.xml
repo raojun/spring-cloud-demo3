@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF" monitorInterval="60">
+    <Properties>
+        <!-- 配置日志文件输出目录 -->
+        <Property name="LOG_PATH">/data/application/uplus-admin/logs</Property>
+    </Properties>
+    <appenders>
+        <!-- 输出到控制台 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [LOGID:%X{ydbus_logid}] %logger{36} - %msg%n"/>
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+
+        <RollingFile name="TraceFile" fileName="${LOG_PATH}/trace.log"
+                     filePattern="${LOG_PATH}/trace.log_%d{yyyy-MM-dd}_%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [LOGID:%X{ydbus_logid}] %logger{36} - %msg%n"/>
+            <CronTriggeringPolicy schedule="0 0 1 * * ?"/>
+            <Policies>
+                <!-- 更新时间 -->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <!-- 自动删除7天之前的日志-->
+            <DefaultRolloverStrategy>
+                <Delete basePath="${LOG_PATH}" maxDepth="1">
+                    <IfFileName glob="trace.log_*.log"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <Filters>
+                <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingFile>
+        <RollingFile name="WarnFile" fileName="${LOG_PATH}/warn.log"
+                     filePattern="${LOG_PATH}/warn.log_%d{yyyy-MM-dd}_%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [LOGID:%X{ydbus_logid}] %logger{36} - %msg%n"/>
+            <CronTriggeringPolicy schedule="0 0 1 * * ?"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <!-- 自动删除7天之前的日志-->
+            <DefaultRolloverStrategy>
+                <Delete basePath="${LOG_PATH}" maxDepth="1">
+                    <IfFileName glob="warn.log_*.log"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingFile>
+    </appenders>
+    <loggers>
+        <root level="INFO">
+            <appender-ref ref="Console"/>
+            <!-- 输出至文件 -->
+            <AppenderRef ref="TraceFile"/>
+            <AppenderRef ref="WarnFile"/>
+        </root>
+    </loggers>
+</configuration>

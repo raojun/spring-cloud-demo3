@@ -1,0 +1,11 @@
+server:
+  port: 9006
+
+spring:
+  application:
+    name: api-server-1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9001/eureka
