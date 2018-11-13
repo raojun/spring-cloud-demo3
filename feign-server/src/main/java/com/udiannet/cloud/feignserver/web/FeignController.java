@@ -1,10 +1,10 @@
-package com.udiannet.cloud.ribbonserver.web;
+package com.udiannet.cloud.feignserver.web;
 
+import com.udiannet.cloud.feignserver.service.FeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author : RaoJun
@@ -12,13 +12,13 @@ import org.springframework.web.client.RestTemplate;
  * @description :
  */
 @RestController
-public class RibbonController {
+public class FeignController {
 
     @Autowired
-    private RestTemplate restTemplate;
+    private FeignService feignService;
 
-    @RequestMapping(method = RequestMethod.GET, path = "/ribbon")
-    public String ribbon(){
-        return restTemplate.getForEntity("http://API-SERVER-1/hello/test", String.class).getBody();
+    @RequestMapping(method = RequestMethod.GET, path = "/feign")
+    public String feign(){
+        return feignService.feign();
     }
 }
